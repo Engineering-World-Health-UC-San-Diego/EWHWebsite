@@ -1,0 +1,138 @@
+@import 'tailwindcss';
+
+/*
+ * DESIGN TOKENS
+ * Brand palette. Use them in components as Tailwind classes, e.g.
+ * `bg-brand`, `text-navy`, `border-line`, `bg-tint`, `bg-teal-dark`.
+ *
+ * Contrast notes (WCAG AA needs 4.5:1 for body text):
+ *   brand on white 7.4:1 · navy on white 15:1 · muted on white 5.0:1
+ *   white on teal-dark 5.5:1 · white on brand 7.4:1
+ *   teal and health green are decorative only (≈2.5:1 on white) — never use
+ *   them for text on white.
+ */
+@theme {
+  --color-brand: #4041ce;
+  --color-brand-dark: #2e2fa8;
+  --color-navy: #1e1f5c;
+  --color-tint: #f4f5fd;
+  --color-teal: #14b8a6;
+  --color-teal-dark: #0f766e;
+  --color-teal-darker: #115e59;
+  --color-health: #2bb673;
+  --color-line: #c7c8f5;
+  --color-muted: #6b6d8a;
+
+  --font-display: 'Outfit Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Inter Variable', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-white font-sans text-navy antialiased;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display text-balance;
+  }
+  a {
+    @apply text-brand;
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-brand);
+    outline-offset: 3px;
+    border-radius: 6px;
+  }
+  ::selection {
+    background: var(--color-line);
+    color: var(--color-navy);
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-6xl px-5 sm:px-8;
+  }
+  .eyebrow {
+    @apply font-display text-sm font-bold tracking-[0.14em] text-brand uppercase;
+  }
+  .prose-ewh p {
+    @apply mb-4 leading-relaxed text-navy/90 last:mb-0;
+  }
+
+  /* Printed-snapshot look used in the hero collage and photo strips. */
+  .snapshot {
+    @apply overflow-hidden rounded-2xl bg-white p-2 shadow-[0_18px_40px_-12px_rgba(30,31,92,0.35),0_4px_10px_-4px_rgba(30,31,92,0.2)] ring-1 ring-navy/5 sm:p-2.5;
+  }
+  .snapshot img {
+    @apply rounded-xl;
+  }
+
+  /* Subtle dot grid background */
+  .dot-grid {
+    background-image: radial-gradient(circle, rgb(64 65 206 / 0.14) 1.2px, transparent 1.3px);
+    background-size: 22px 22px;
+  }
+}
+
+/* ---------- Motion ---------- */
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.float {
+  animation: float var(--float-duration, 7s) ease-in-out infinite;
+  animation-delay: var(--float-delay, 0s);
+}
+[data-paused='true'] .float {
+  animation-play-state: paused;
+}
+
+.photo-layer-enter {
+  animation: fade-in 1.4s ease forwards;
+}
+
+.tilt-on-hover {
+  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.tilt-on-hover:hover,
+.tilt-on-hover:focus-within {
+  transform: rotate(var(--hover-tilt, 2deg)) scale(1.04);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+  .tilt-on-hover:hover,
+  .tilt-on-hover:focus-within {
+    transform: none;
+  }
+}
